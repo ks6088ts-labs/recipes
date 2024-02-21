@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "azure-ai-search-client"
+version = "0.0.1"
+description = ""
+authors = ["ks6088ts <ks6088ts@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+typer = "^0.9.0"
+python-dotenv = "^1.0.1"
+azure-search-documents = "11.6.0b1"
+openai = "^1.12.0"
+azure-identity = "^1.15.0"
+aiohttp = "^3.9.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
