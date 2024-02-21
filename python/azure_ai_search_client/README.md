@@ -7,14 +7,17 @@ This is a CLI to create an index, upload documents, and query the index for Azur
 - Python 3.10 or later
 - Azure AI Search resource
 - Azure OpenAI resource
-- [Poetry](https://python-poetry.org/docs/#installation)
+- [Poetry](https://python-poetry.org/docs/#installation) (optional)
 
 ## Setup
 
 ### Install dependencies
 
 ```shell
-# using poetry
+# install dependencies to your environment
+pip install -r requirements.txt
+
+# if you use poetry
 poetry install
 ```
 
@@ -30,7 +33,7 @@ Create a `settings.env` file based on [settings.env.sample](./settings.env.sampl
 ### Help
 
 ```shell
-❯ poetry run python main.py --help
+❯ python main.py --help
 Usage: main.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
@@ -50,22 +53,22 @@ Commands:
 ### Create index
 
 ```shell
-❯ poetry run python main.py create-index
+❯ python main.py create-index
 ```
 
 ### Upload documents
 
 ```shell
-❯ poetry run python main.py upload-documents --documents-csv "./documents.csv"
+❯ python main.py upload-documents --documents-csv "./documents.csv"
 ```
 
 ### Search
 
 ```shell
-❯ poetry run python main.py search --query-text "baseball"
+❯ python main.py search --query-text "baseball"
 {'id': '2', 'content': '河原町二郎は野球が好きです。', 'category': 'test0', 'sourcepage': '2', 'sourcefile': 'sports.pdf', 'search_score': 0.01666666753590107, '@search.reranker_score': 1.5674018859863281}
-{'id': '3', 'content': '堀川五郎はラクロスが好きです。', 'category': 'test1', 'sourcepage': '5', 'sourcefile': 'sports.pdf', 'search_score': 0.016129031777381897, '@search.reranker_score': 1.318857192993164}
-{'id': '1', 'content': '東大路太郎はサッカーが好きです。', 'category': 'test0', 'sourcepage': '1', 'sourcefile': 'sports.pdf', 'search_score': 0.016393441706895828, '@search.reranker_score': 1.2035845518112183}
+{'id': '4', 'content': '烏丸四郎はバスケットボールが好きです。', 'category': 'test0', 'sourcepage': '4', 'sourcefile': 'sports.pdf', 'search_score': 0.016393441706895828, '@search.reranker_score': 1.5218290090560913}
+{'id': '3', 'content': '寺町三郎は卓球が好きです。', 'category': 'test0', 'sourcepage': '3', 'sourcefile': 'sports.pdf', 'search_score': 0.016129031777381897, '@search.reranker_score': 1.3268994092941284}
 ```
 
 ## References
