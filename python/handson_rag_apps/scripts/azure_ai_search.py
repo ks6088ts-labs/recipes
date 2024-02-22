@@ -110,7 +110,7 @@ def get_index(index_name: str, fields: list) -> SearchIndex:
                     kind="azureOpenAI",
                     azure_open_ai_parameters=AzureOpenAIParameters(
                         resource_uri=os.getenv("azure_endpoint"),
-                        deployment_id=os.getenv("azure_deployment"),
+                        deployment_id=os.getenv("azure_deployment_embedding"),
                         api_key=os.getenv("api_key"),
                     ),
                 ),
@@ -165,7 +165,7 @@ async def upload_documents_impl(index_name: str, path_to_csv: str):
     async with get_azure_search_client(index_name) as search_client:
         embeddings = aoai_client.embeddings.create(
             input=[document["content"] for document in documents],
-            model=os.getenv("azure_deployment"),
+            model=os.getenv("azure_deployment_embedding"),
         )
         for i, document in enumerate(documents):
             document["embedding"] = embeddings.data[i].embedding
@@ -177,7 +177,7 @@ async def search_impl(query_text: str, index_name: str):
     aoai_client = get_azure_openai_client()
     embeddings = aoai_client.embeddings.create(
         input=query_text,
-        model=os.getenv("azure_deployment"),
+        model=os.getenv("azure_deployment_embedding"),
     )
     query_vector = embeddings.data[0].embedding
 
@@ -211,8 +211,7 @@ async def search_impl(query_text: str, index_name: str):
                         "@search.reranker_score": document["@search.reranker_score"],
                     }
                 )
-        for document in documents:
-            print(document)
+        return documents
 
 
 @app.command()
@@ -235,12 +234,41 @@ def upload_documents(documents_csv="documents.csv"):
 @app.command()
 def search(query_text="basketball"):
     index_name = get_index_name()
-    asyncio.run(
+    documents = asyncio.run(
         search_impl(
             query_text=query_text,
             index_name=index_name,
         )
     )
+    for document in documents:
+        print(document)
+
+
+@app.command()
+def rag(query_text="河原町さんの好きなスポーツは何ですか？"):
+    index_name = get_index_name()
+    documents = asyncio.run(
+        search_impl(
+            query_text=query_text,
+            index_name=index_name,
+        )
+    )
+    sources = []
+    for document in documents:
+        sources.append(document["content"])
+    sources_str = "\n".join(sources)
+    client = get_azure_openai_client()
+    messages = [
+        {"role": "system", "content": "あなたは優秀なヘルプデスクボットです。"},
+        {"role": "user", "content": query_text},
+    ]
+    messages.append({"role": "system", "content": f"Sources: {sources_str}"})
+
+    chat_completion = client.chat.completions.create(
+        model=os.getenv("azure_deployment_gpt"),
+        messages=messages,
+    )
+    print(chat_completion.choices[0].message.content)
 
 
 if __name__ == "__main__":
