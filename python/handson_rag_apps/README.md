@@ -18,7 +18,7 @@ This is a CLI to create an index, upload documents, and query the index for Azur
 pip install -r requirements.txt
 
 # if you use poetry
-poetry install
+poetry install --no-root
 ```
 
 ### Setup cloud resources
@@ -26,15 +26,15 @@ poetry install
 - Create an Azure AI Search resource and get the key
 - Create an Azure OpenAI resource and get the key
 
-Create a `settings.env` file based on [settings.env.sample](./settings.env.sample) to match your environment. This file is read as environment variables from the [main.py](./main.py) script.
+Create a `settings.env` file based on [settings.env.sample](./settings.env.sample) to match your environment. This file is read as environment variables from scripts.
 
 ## Usage
 
 ### Help
 
 ```shell
-❯ python main.py --help
-Usage: main.py [OPTIONS] COMMAND [ARGS]...
+❯ python scripts/azure_ai_search.py --help
+Usage: azure_ai_search.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --install-completion [bash|zsh|fish|powershell|pwsh]
@@ -53,19 +53,19 @@ Commands:
 ### Create index
 
 ```shell
-❯ python main.py create-index
+❯ python scripts/azure_ai_search.py create-index
 ```
 
 ### Upload documents
 
 ```shell
-❯ python main.py upload-documents --documents-csv "./documents.csv"
+❯ python scripts/azure_ai_search.py upload-documents --documents-csv "./documents.csv"
 ```
 
 ### Search
 
 ```shell
-❯ python main.py search --query-text "baseball"
+❯ python scripts/azure_ai_search.py search --query-text "baseball"
 {'id': '2', 'content': '河原町二郎は野球が好きです。', 'category': 'test0', 'sourcepage': '2', 'sourcefile': 'sports.pdf', 'search_score': 0.01666666753590107, '@search.reranker_score': 1.5674018859863281}
 {'id': '4', 'content': '烏丸四郎はバスケットボールが好きです。', 'category': 'test0', 'sourcepage': '4', 'sourcefile': 'sports.pdf', 'search_score': 0.016393441706895828, '@search.reranker_score': 1.5218290090560913}
 {'id': '3', 'content': '寺町三郎は卓球が好きです。', 'category': 'test0', 'sourcepage': '3', 'sourcefile': 'sports.pdf', 'search_score': 0.016129031777381897, '@search.reranker_score': 1.3268994092941284}

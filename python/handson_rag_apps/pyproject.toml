@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "azure-ai-search-client"
+name = "handson_rag_apps"
 version = "0.0.1"
 description = ""
 authors = ["ks6088ts <ks6088ts@gmail.com>"]
