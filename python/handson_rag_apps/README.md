@@ -53,22 +53,66 @@ Commands:
 ### Chat Completion
 
 ```shell
-poetry run python scripts/azure_openai_service.py chat-completion --content "日本とオーストラリアの天気を教えて"
+❯ python scripts/azure_openai_service.py chat-completion --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuzgw4LUI9PUa8tLmWJRssOgDykK', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='日本の天気はどこでしょうか、あなたのいる場所を教えていただければ、正確な天気をお伝えできます。\n\nオーストラリアの天気はどこでしょうか、都市名や地域名を教えていただければ、正確な天気をお伝えできます。', role='assistant', function_call=None, tool_calls=None), content_filter_results={'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}})], created=1708576144, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=102, prompt_tokens=24, total_tokens=126), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
 ```
 
 ### Functions
 
 ```shell
-❯ poetry run python scripts/azure_openai_service.py functions --content "日本とオーストラリアの天気を教えて"
+❯ python scripts/azure_openai_service.py functions --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuyohsNXcwPqaZH71ZqROO3hRbz5', choices=[Choice(finish_reason='function_call', index=0, logprobs=None, message=ChatCompletionMessage(content=None, role='assistant', function_call=FunctionCall(arguments='{"location":"Tokyo, Japan","unit":"celsius"}', name='get_current_weather'), tool_calls=None), content_filter_results={})], created=1708576090, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=23, prompt_tokens=91, total_tokens=114), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
 ```
 
 ### Tools
 
 ```shell
-poetry run python scripts/azure_openai_service.py tools --content "日本とオーストラリアの天気を教えて"
+❯ python scripts/azure_openai_service.py tools --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuzGTqggLLSK0eWN5I9qfPXRXRtr', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, role='assistant', function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_acaztZMjJp0rl0jxzlbt3byM', function=Function(arguments='{"location": "Tokyo, Japan", "unit": "celsius"}', name='get_current_weather'), type='function'), ChatCompletionMessageToolCall(id='call_XNjm0zteIsWbP84Q9nL6YyMx', function=Function(arguments='{"location": "Sydney, Australia", "unit": "celsius"}', name='get_current_weather'), type='function')]), content_filter_results={})], created=1708576118, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=61, prompt_tokens=91, total_tokens=152), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
+```
+
+## Bing Search
+
+### Help
+
+```shell
+❯ python scripts/bing_search.py --help
+Usage: bing_search.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  --help                          Show this message and exit.
+
+Commands:
+  bing-search
+  rag
+```
+
+### Search
+
+```shell
+❯ python scripts/bing_search.py bing-search --content "最新のプリキュアのタイトルを教えて"
+新作プリキュアタイトル発表！ 『わんだふるぷりきゅあ！』は ...
+プリキュア新作タイトル発表 21作目は『わんだふるぷりきゅあ ...
+「プリキュア」最新作「わんだふるぷりきゅあ！」シリーズ初 ...
+【プリキュア】新シリーズのタイトルは『わんだふる ...
+「プリキュア」新作タイトルは「わんだふるぷりきゅあ！」初 ...
+2024年度新プリキュア タイトル決定！ - アキバ総研
+『プリキュア』新シリーズタイトルは『わんだふるぷりきゅあ ...
+プリキュア第21弾タイトル「わんだふるぷりきゅあ！」に決定 ...
+プリキュアシリーズ最新作『デリシャスパーティ♡プリキュア ...
+【新プリキュア】「プリキュア」シリーズ第21弾タイトル決定 ...
+```
+
+### RAG
+
+```shell
+❯ python scripts/bing_search.py rag --content "最新のプリキュアのタイトルを教えて"
+最新のプリキュアのタイトルは「わんだふるぷりきゅあ！」です。
 ```
 
 ## Azure AI Search
