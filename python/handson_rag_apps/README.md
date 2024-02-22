@@ -1,13 +1,29 @@
-# Azure AI Search client CLI written in Python
+# Simple hands-on for RAG app on Azure
 
-This is a CLI to create an index, upload documents, and query the index for Azure AI Search. The Python client library for Azure AI Search is [azure-search-documents==11.6.0b1](https://pypi.org/project/azure-search-documents/11.6.0b1/).
+This is a simple hands-on for RAG app on Azure. The following features are implemented:
+
+- Azure OpenAI Service
+  - Chat Completion
+  - Functions
+  - Tools
+- Bing Search
+  - Search
+  - RAG
+- Azure AI Search
+  - Create index
+  - Upload documents
+  - Search
+  - RAG
+
+Note: [azure-search-documents==11.6.0b1](https://pypi.org/project/azure-search-documents/11.6.0b1/) is used for Azure AI Search.
 
 ## Prerequisites
 
-- Python 3.10 or later
-- Azure AI Search resource
-- Azure OpenAI resource
+- [Python](https://www.python.org/downloads/) 3.10 or later
 - [Poetry](https://python-poetry.org/docs/#installation) (optional)
+- [Azure AI Search resource](https://learn.microsoft.com/en-us/azure/search/search-what-is-azure-search)
+- [Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-services/openai/overview)
+- [Bing Search resource](https://learn.microsoft.com/en-us/bing/search-apis/bing-web-search/create-bing-search-service-resource)
 
 ## Setup
 
@@ -25,6 +41,7 @@ poetry install --no-root
 
 - Create an Azure AI Search resource and get the key
 - Create an Azure OpenAI resource and get the key
+- Create a Bing Search resource and get the key
 
 Create a `settings.env` file based on [settings.env.sample](./settings.env.sample) to match your environment. This file is read as environment variables from scripts.
 
@@ -117,6 +134,8 @@ Commands:
 
 ## Azure AI Search
 
+Most of the code is based on the [Azure-Samples/azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo) repository.
+
 ### Help
 
 ```shell
@@ -158,6 +177,15 @@ Commands:
 {'id': '3', 'content': '寺町三郎は卓球が好きです。', 'category': 'test0', 'sourcepage': '3', 'sourcefile': 'sports.pdf', 'search_score': 0.016129031777381897, '@search.reranker_score': 1.3268994092941284}
 ```
 
+### RAG
+
+```shell
+❯ python scripts/azure_ai_search.py rag --query-text "河原町くんの好きなスポーツは何？"
+河原町くんの好きなスポーツは野球です。
+❯ python scripts/azure_ai_search.py rag --query-text "ラクロスが好きな人は誰？"
+ラクロスが好きな人は、「堀川五郎」です。
+```
+
 ## References
 
-- [Azure-Samples/azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo)
+- [ks6088ts.github.io / Azure 上で作る RAG アプリの基礎](https://ks6088ts.github.io/blog/handson-rag-app)
