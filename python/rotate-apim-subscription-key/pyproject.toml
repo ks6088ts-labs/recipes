@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "rotate-apim-subscription-key"
+version = "0.0.1"
+description = "Rotate subscription keys on API Management"
+authors = ["ks6088ts <ks6088ts@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
