@@ -1,8 +1,13 @@
 # Rotate subscription keys for API Management
 
+Code snippets to rotate subscription keys for API Management.
+
 ## Prerequisites
 
 - Python
+- Azure Resources
+  - Key Vault
+  - API Management
 
 ## Setup
 
@@ -51,9 +56,26 @@ az login --service-principal \
 
 ```shell
 ❯ python main.py --help
+Usage: main.py [OPTIONS] COMMAND [ARGS]...
+
+Options:
+  --install-completion [bash|zsh|fish|powershell|pwsh]
+                                  Install completion for the specified shell.
+  --show-completion [bash|zsh|fish|powershell|pwsh]
+                                  Show completion for the specified shell, to
+                                  copy it or customize the installation.
+  --help                          Show this message and exit.
+
+Commands:
+  get-key-vault-secret
+  list-api-management-secrets
+  regenerate-api-management-primary-key
+  set-key-vault-secret
 ```
 
 ### Set KeyVault secret
+
+- [Quickstart: Azure Key Vault secret client library for Python](https://learn.microsoft.com/en-us/azure/key-vault/secrets/quick-create-python?tabs=azure-cli)
 
 ```shell
 ❯ python main.py set-key-vault-secret \
@@ -64,6 +86,8 @@ az login --service-principal \
 
 ### Get KeyVault secret
 
+- [Quickstart: Azure Key Vault secret client library for Python](https://learn.microsoft.com/en-us/azure/key-vault/secrets/quick-create-python?tabs=azure-cli)
+
 ```shell
 ❯ python main.py get-key-vault-secret \
   --key-vault-name "name" \
@@ -71,7 +95,40 @@ az login --service-principal \
   --key-vault-secret-version "00000000"
 ```
 
+### Regenerate API Management primary subscription key
+
+- [Subscription - Regenerate Primary Key](https://learn.microsoft.com/en-us/rest/api/apimanagement/subscription/regenerate-primary-key?view=rest-apimanagement-2022-08-01&tabs=Python#apimanagementsubscriptionregenerateprimarykey)
+
+```shell
+subscriptionId=$(az account show --query id --output tsv)
+resourceGroupName="your-resource-group-name"
+apiManagementName="your-api-management-name"
+apiManagementSubscriptionId="your-api-management-subscription-id"
+
+python main.py regenerate-api-management-primary-key \
+  --subscription-id $subscriptionId \
+  --resource-group-name $resourceGroupName \
+  --api-management-name $apiManagementName \
+  --api-management-subscription-id $apiManagementSubscriptionId
+```
+
+### List API Management secrets
+
+- [Subscription - List Secrets](https://learn.microsoft.com/en-us/rest/api/apimanagement/subscription/list-secrets?view=rest-apimanagement-2022-08-01&tabs=Python#apimanagementsubscriptionlistsecrets)
+
+```shell
+subscriptionId=$(az account show --query id --output tsv)
+resourceGroupName="your-resource-group-name"
+apiManagementName="your-api-management-name"
+apiManagementSubscriptionId="your-api-management-subscription-id"
+
+python main.py list-api-management-secrets \
+  --subscription-id $subscriptionId \
+  --resource-group-name $resourceGroupName \
+  --api-management-name $apiManagementName \
+  --api-management-subscription-id $apiManagementSubscriptionId
+```
+
 # References
 
-- [Quickstart: Azure Key Vault secret client library for Python](https://learn.microsoft.com/en-us/azure/key-vault/secrets/quick-create-python?tabs=azure-cli)
 - [How to auto rotate an API subscription key in Azure](https://learn.microsoft.com/en-us/answers/questions/963672/how-to-auto-rotate-an-api-subscription-key-in-azur)
