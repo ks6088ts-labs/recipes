@@ -30,10 +30,16 @@ Note: [azure-search-documents==11.6.0b1](https://pypi.org/project/azure-search-d
 ### Install dependencies
 
 ```shell
+# create a virtual environment
+python -m venv .venv
+
+# activate the virtual environment
+source .venv/bin/activate
+
 # install dependencies to your environment
 pip install -r requirements.txt
 
-# if you use poetry
+# or if you use poetry
 poetry install --no-root
 ```
 
@@ -76,12 +82,16 @@ ChatCompletion(id='chatcmpl-8uuzgw4LUI9PUa8tLmWJRssOgDykK', choices=[Choice(fini
 
 ### Functions
 
+Query the weather in Tokyo, Japan and Sydney, Australia but the response includes just one case (Tokyo, Japan).
+
 ```shell
 ❯ python scripts/azure_openai_service.py functions --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuyohsNXcwPqaZH71ZqROO3hRbz5', choices=[Choice(finish_reason='function_call', index=0, logprobs=None, message=ChatCompletionMessage(content=None, role='assistant', function_call=FunctionCall(arguments='{"location":"Tokyo, Japan","unit":"celsius"}', name='get_current_weather'), tool_calls=None), content_filter_results={})], created=1708576090, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=23, prompt_tokens=91, total_tokens=114), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
 ```
 
 ### Tools
+
+Query the weather in Tokyo, Japan and Sydney, Australia and the response includes both cases (Tokyo, Japan and Sydney, Australia).
 
 ```shell
 ❯ python scripts/azure_openai_service.py tools --content "日本とオーストラリアの天気を教えて"
@@ -165,7 +175,7 @@ Commands:
 ### Upload documents
 
 ```shell
-❯ python scripts/azure_ai_search.py upload-documents --documents-csv "./documents.csv"
+❯ python scripts/azure_ai_search.py upload-documents --documents-csv "./data/documents.csv"
 ```
 
 ### Search
