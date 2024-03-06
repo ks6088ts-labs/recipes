@@ -41,12 +41,12 @@ def bing_search(content=DEFAULT_PROMPT):
 @app.command()
 def rag(content=DEFAULT_PROMPT):
     sources_str = search(content)
+    print(f"got sources: {sources_str}")
     client = get_azure_openai_client()
     messages = [
         {"role": "system", "content": "あなたは優秀なヘルプデスクボットです。"},
-        {"role": "user", "content": content},
+        {"role": "user", "content": content + f"\nSources: {sources_str}"},
     ]
-    messages.append({"role": "system", "content": f"Sources: {sources_str}"})
 
     chat_completion = client.chat.completions.create(
         model=os.getenv("azure_deployment_gpt"),

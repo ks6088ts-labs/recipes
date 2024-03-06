@@ -257,12 +257,12 @@ def rag(query_text="河原町さんの好きなスポーツは何ですか？"):
     for document in documents:
         sources.append(document["content"])
     sources_str = "\n".join(sources)
+    print(f"got sources: {sources_str}")
     client = get_azure_openai_client()
     messages = [
         {"role": "system", "content": "あなたは優秀なヘルプデスクボットです。"},
-        {"role": "user", "content": query_text},
+        {"role": "user", "content": query_text + f"\nSources: {sources_str}"},
     ]
-    messages.append({"role": "system", "content": f"Sources: {sources_str}"})
 
     chat_completion = client.chat.completions.create(
         model=os.getenv("azure_deployment_gpt"),
