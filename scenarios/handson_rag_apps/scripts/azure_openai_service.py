@@ -1,15 +1,26 @@
 import os
 
 import typer
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+from typing_extensions import Annotated
 
 app = typer.Typer()
 
 DEFAULT_PROMPT = "What is the weather like in Boston and New York?"
 
 
-def get_azure_openai_client() -> AzureOpenAI:
+def get_azure_openai_client(use_ms_entra_id=False) -> AzureOpenAI:
+    if use_ms_entra_id:
+        token_provider = get_bearer_token_provider(
+            DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+        )
+        return AzureOpenAI(
+            api_version=os.getenv("api_version"),
+            azure_endpoint=os.getenv("azure_endpoint"),
+            azure_ad_token_provider=token_provider,
+        )
     return AzureOpenAI(
         api_key=os.getenv("api_key"),
         api_version=os.getenv("api_version"),
@@ -18,8 +29,13 @@ def get_azure_openai_client() -> AzureOpenAI:
 
 
 @app.command()
-def chat_completion(content=DEFAULT_PROMPT):
-    client = get_azure_openai_client()
+def chat_completion(
+    content=DEFAULT_PROMPT,
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
+    client = get_azure_openai_client(use_ms_entra_id)
     chat_completion = client.chat.completions.create(
         model=os.getenv("azure_deployment_gpt"),
         messages=[
@@ -33,7 +49,12 @@ def chat_completion(content=DEFAULT_PROMPT):
 
 
 @app.command()
-def functions(content=DEFAULT_PROMPT):
+def functions(
+    content=DEFAULT_PROMPT,
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     functions = []
     functions.append(
         {
@@ -53,7 +74,7 @@ def functions(content=DEFAULT_PROMPT):
         }
     )
 
-    client = get_azure_openai_client()
+    client = get_azure_openai_client(use_ms_entra_id)
     chat_completion = client.chat.completions.create(
         model="gpt-35-turbo",
         messages=[
@@ -68,7 +89,12 @@ def functions(content=DEFAULT_PROMPT):
 
 
 @app.command()
-def tools(content=DEFAULT_PROMPT):
+def tools(
+    content=DEFAULT_PROMPT,
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     tools = []
     tools.append(
         {
@@ -91,7 +117,7 @@ def tools(content=DEFAULT_PROMPT):
         }
     )
 
-    client = get_azure_openai_client()
+    client = get_azure_openai_client(use_ms_entra_id)
     chat_completion = client.chat.completions.create(
         model="gpt-35-turbo",
         messages=[
