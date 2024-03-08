@@ -1,6 +1,6 @@
-# Azure上のRAGアプリのシンプルなハンズオン
+# Azure 上の RAG アプリのシンプルなハンズオン
 
-これはAzure上のRAGアプリのシンプルなハンズオンです。以下の機能が実装されています：
+これは Azure 上の RAG アプリのシンプルなハンズオンです。以下の機能が実装されています：
 
 - Azure OpenAI Service
   - Chat Completion
@@ -82,6 +82,9 @@ Commands:
 ```shell
 ❯ python scripts/azure_openai_service.py chat-completion --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuzgw4LUI9PUa8tLmWJRssOgDykK', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='日本の天気はどこでしょうか、あなたのいる場所を教えていただければ、正確な天気をお伝えできます。\n\nオーストラリアの天気はどこでしょうか、都市名や地域名を教えていただければ、正確な天気をお伝えできます。', role='assistant', function_call=None, tool_calls=None), content_filter_results={'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}})], created=1708576144, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=102, prompt_tokens=24, total_tokens=126), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
+
+❯ python scripts/azure_openai_service.py chat-completion --content "日本とオーストラリアの天気を教えて" --use-ms-entra-id
+ChatCompletion(id='chatcmpl-90KYx2k6ZAOVlGDNnHo2XFsXnT8qK', choices=[Choice(finish_reason='stop', index=0, logprobs=None, message=ChatCompletionMessage(content='申し訳ありませんが、現在の具体的な日本とオーストラリアの天気情報を提供することはできません。天候情報は頻繁に変化するため、最新の情報は天気予報サイトや天気アプリをご利用ください。', role='assistant', function_call=None, tool_calls=None), content_filter_results={'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}})], created=1709866071, model='gpt-35-turbo', object='chat.completion', system_fingerprint=None, usage=CompletionUsage(completion_tokens=90, prompt_tokens=24, total_tokens=114), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
 ```
 
 ### Functions
@@ -213,3 +216,6 @@ Azure AI Search に対して検索を行います。
 ## References
 
 - [ks6088ts.github.io / Azure 上で作る RAG アプリの基礎](https://ks6088ts.github.io/blog/handson-rag-app)
+- [リソースにアクセスできる Microsoft Entra アプリケーションとサービス プリンシパルを作成する](https://learn.microsoft.com/ja-jp/entra/identity-platform/howto-create-service-principal-portal)
+- [Python を使用して OpenAI エンドポイントと Azure OpenAI エンドポイントを切り替える方法 / Microsoft Entra ID 認証](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
+- [Azure OpenAI Service のロールベースのアクセス制御](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/role-based-access-control)
