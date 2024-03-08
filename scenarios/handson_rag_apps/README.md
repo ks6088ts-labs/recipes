@@ -53,6 +53,12 @@ Create a `settings.env` file based on [settings.env.sample](./settings.env.sampl
 
 ## Azure OpenAI Service
 
+To call the Azure OpenAI Service with service principal authentication, you need to create a service principal and assign the `Cognitive Services OpenAI User` role to the service principal.
+
+- [Create a Microsoft Entra application and service principal that can access resources](https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal)
+- [How to switch between OpenAI and Azure OpenAI endpoints with Python / Microsoft Entra ID authentication](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
+- [Role-based access control for Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control)
+
 ### Help
 
 ```shell
@@ -148,6 +154,9 @@ Commands:
 ## Azure AI Search
 
 Most of the code is based on the [Azure-Samples/azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo) repository.
+To call the Azure AI Search API with service principal authentication, you need to create a service principal and assign the `Search Index Data Reader` role to the service principal.
+
+- [Azure AI Search client library for Python - version 11.4.0](https://learn.microsoft.com/en-us/python/api/overview/azure/search-documents-readme?view=azure-python#create-a-client-using-microsoft-entra-id-authentication)
 
 ### Help
 
@@ -157,14 +166,17 @@ Usage: azure_ai_search.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --install-completion [bash|zsh|fish|powershell|pwsh]
-                                  Install completion for the specified shell.
+                                  Install completion for the specified
+                                  shell.
   --show-completion [bash|zsh|fish|powershell|pwsh]
-                                  Show completion for the specified shell, to
-                                  copy it or customize the installation.
+                                  Show completion for the specified shell,
+                                  to copy it or customize the
+                                  installation.
   --help                          Show this message and exit.
 
 Commands:
   create-index
+  rag
   search
   upload-documents
 ```
@@ -173,6 +185,7 @@ Commands:
 
 ```shell
 ❯ python scripts/azure_ai_search.py create-index
+❯ python scripts/azure_ai_search.py create-index --use-ms-entra-id
 ```
 
 ### Upload documents
@@ -202,6 +215,3 @@ Commands:
 ## References
 
 - [ks6088ts.github.io / Azure 上で作る RAG アプリの基礎](https://ks6088ts.github.io/blog/handson-rag-app)
-- [Create a Microsoft Entra application and service principal that can access resources](https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal)
-- [How to switch between OpenAI and Azure OpenAI endpoints with Python / Microsoft Entra ID authentication](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
-- [Role-based access control for Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control)

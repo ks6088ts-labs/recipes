@@ -3,6 +3,7 @@ import os
 
 import typer
 from azure.core.credentials import AzureKeyCredential
+from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from azure.search.documents.aio import SearchClient
 from azure.search.documents.indexes.aio import SearchIndexClient
 from azure.search.documents.indexes.models import (
@@ -30,6 +31,7 @@ from azure.search.documents.models import (
 )
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+from typing_extensions import Annotated
 
 app = typer.Typer()
 
@@ -119,14 +121,25 @@ def get_index(index_name: str, fields: list) -> SearchIndex:
     )
 
 
-def get_azure_search_index_client() -> SearchIndexClient:
+def get_azure_search_index_client(use_ms_entra_id: bool) -> SearchIndexClient:
+    if use_ms_entra_id:
+        return SearchIndexClient(
+            endpoint=os.getenv("azure_search_endpoint"),
+            credential=DefaultAzureCredential(),
+        )
     return SearchIndexClient(
         endpoint=os.getenv("azure_search_endpoint"),
         credential=AzureKeyCredential(os.getenv("azure_search_key")),
     )
 
 
-def get_azure_search_client(index_name: str) -> SearchClient:
+def get_azure_search_client(index_name: str, use_ms_entra_id: bool) -> SearchClient:
+    if use_ms_entra_id:
+        return SearchClient(
+            endpoint=os.getenv("azure_search_endpoint"),
+            index_name=index_name,
+            credential=DefaultAzureCredential(),
+        )
     return SearchClient(
         endpoint=os.getenv("azure_search_endpoint"),
         index_name=index_name,
@@ -134,7 +147,16 @@ def get_azure_search_client(index_name: str) -> SearchClient:
     )
 
 
-def get_azure_openai_client() -> AzureOpenAI:
+def get_azure_openai_client(use_ms_entra_id) -> AzureOpenAI:
+    if use_ms_entra_id:
+        token_provider = get_bearer_token_provider(
+            DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
+        )
+        return AzureOpenAI(
+            api_version=os.getenv("api_version"),
+            azure_endpoint=os.getenv("azure_endpoint"),
+            azure_ad_token_provider=token_provider,
+        )
     return AzureOpenAI(
         api_key=os.getenv("api_key"),
         api_version=os.getenv("api_version"),
@@ -154,15 +176,17 @@ def load_csv(path_to_csv: str) -> list:
         return documents
 
 
-async def create_index_impl(index: SearchIndex):
-    async with get_azure_search_index_client() as search_index_client:
+async def create_index_impl(index: SearchIndex, use_ms_entra_id: bool):
+    async with get_azure_search_index_client(use_ms_entra_id) as search_index_client:
         await search_index_client.create_index(index)
 
 
-async def upload_documents_impl(index_name: str, path_to_csv: str):
-    aoai_client = get_azure_openai_client()
+async def upload_documents_impl(
+    index_name: str, path_to_csv: str, use_ms_entra_id: bool
+):
+    aoai_client = get_azure_openai_client(use_ms_entra_id)
     documents = load_csv(path_to_csv=path_to_csv)
-    async with get_azure_search_client(index_name) as search_client:
+    async with get_azure_search_client(index_name, use_ms_entra_id) as search_client:
         embeddings = aoai_client.embeddings.create(
             input=[document["content"] for document in documents],
             model=os.getenv("azure_deployment_embedding"),
@@ -173,15 +197,15 @@ async def upload_documents_impl(index_name: str, path_to_csv: str):
         await search_client.upload_documents(documents)
 
 
-async def search_impl(query_text: str, index_name: str):
-    aoai_client = get_azure_openai_client()
+async def search_impl(query_text: str, index_name: str, use_ms_entra_id: bool):
+    aoai_client = get_azure_openai_client(use_ms_entra_id)
     embeddings = aoai_client.embeddings.create(
         input=query_text,
         model=os.getenv("azure_deployment_embedding"),
     )
     query_vector = embeddings.data[0].embedding
 
-    async with get_azure_search_client(index_name) as search_client:
+    async with get_azure_search_client(index_name, use_ms_entra_id) as search_client:
         results = await search_client.search(
             search_text=query_text,
             query_type=QueryType.SEMANTIC,
@@ -215,29 +239,50 @@ async def search_impl(query_text: str, index_name: str):
 
 
 @app.command()
-def create_index():
+def create_index(
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     fields = get_fields()
     index_name = get_index_name()
     index = get_index(
         index_name=index_name,
         fields=fields,
     )
-    asyncio.run(create_index_impl(index))
+    asyncio.run(create_index_impl(index, use_ms_entra_id))
 
 
 @app.command()
-def upload_documents(documents_csv="documents.csv"):
+def upload_documents(
+    documents_csv="documents.csv",
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     index_name = get_index_name()
-    asyncio.run(upload_documents_impl(index_name=index_name, path_to_csv=documents_csv))
+    asyncio.run(
+        upload_documents_impl(
+            index_name=index_name,
+            path_to_csv=documents_csv,
+            use_ms_entra_id=use_ms_entra_id,
+        )
+    )
 
 
 @app.command()
-def search(query_text="basketball"):
+def search(
+    query_text="basketball",
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     index_name = get_index_name()
     documents = asyncio.run(
         search_impl(
             query_text=query_text,
             index_name=index_name,
+            use_ms_entra_id=use_ms_entra_id,
         )
     )
     for document in documents:
@@ -245,12 +290,18 @@ def search(query_text="basketball"):
 
 
 @app.command()
-def rag(query_text="河原町さんの好きなスポーツは何ですか？"):
+def rag(
+    query_text="河原町さんの好きなスポーツは何ですか？",
+    use_ms_entra_id: Annotated[
+        bool, typer.Option(help="Use Microsoft Entra ID.")
+    ] = False,
+):
     index_name = get_index_name()
     documents = asyncio.run(
         search_impl(
             query_text=query_text,
             index_name=index_name,
+            use_ms_entra_id=use_ms_entra_id,
         )
     )
     sources = []
@@ -258,7 +309,7 @@ def rag(query_text="河原町さんの好きなスポーツは何ですか？"):
         sources.append(document["content"])
     sources_str = "\n".join(sources)
     print(f"got sources: {sources_str}")
-    client = get_azure_openai_client()
+    client = get_azure_openai_client(use_ms_entra_id)
     messages = [
         {"role": "system", "content": "あなたは優秀なヘルプデスクボットです。"},
         {"role": "user", "content": query_text + f"\nSources: {sources_str}"},

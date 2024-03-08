@@ -57,6 +57,12 @@ poetry install --no-root
 
 ## Azure OpenAI Service
 
+Azure OpenAI Service の API をサービスプリンシパル認証で呼び出すには、サービスプリンシパルを作成し、サービスプリンシパルに `Cognitive Services OpenAI User` ロールを割り当てる必要があります。
+
+- [リソースにアクセスできる Microsoft Entra アプリケーションとサービス プリンシパルを作成する](https://learn.microsoft.com/ja-jp/entra/identity-platform/howto-create-service-principal-portal)
+- [Python を使用して OpenAI エンドポイントと Azure OpenAI エンドポイントを切り替える方法](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
+- [Azure OpenAI Service のロールベースのアクセス制御](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/role-based-access-control)
+
 ### Help
 
 ```shell
@@ -157,6 +163,10 @@ Bing 単体の検索結果として一部旧作のプリキュアの情報も含
 
 ほとんどのコードは[Azure-Samples/azure-search-openai-demo](https://github.com/Azure-Samples/azure-search-openai-demo)リポジトリに基づいています。
 
+Azure AI Search の API をサービスプリンシパル認証で呼び出すには、サービスプリンシパルを作成し、サービスプリンシパルに `Search Index Data Reader` ロールを割り当てる必要があります。
+
+- [Python 用 Azure Cognitive Search クライアント ライブラリ - バージョン 11.4.0](https://learn.microsoft.com/en-us/python/api/overview/azure/search-documents-readme?view=azure-python#create-a-client-using-microsoft-entra-id-authentication)
+
 ### Help
 
 ```shell
@@ -165,14 +175,17 @@ Usage: azure_ai_search.py [OPTIONS] COMMAND [ARGS]...
 
 Options:
   --install-completion [bash|zsh|fish|powershell|pwsh]
-                                  Install completion for the specified shell.
+                                  Install completion for the specified
+                                  shell.
   --show-completion [bash|zsh|fish|powershell|pwsh]
-                                  Show completion for the specified shell, to
-                                  copy it or customize the installation.
+                                  Show completion for the specified shell,
+                                  to copy it or customize the
+                                  installation.
   --help                          Show this message and exit.
 
 Commands:
   create-index
+  rag
   search
   upload-documents
 ```
@@ -181,6 +194,7 @@ Commands:
 
 ```shell
 ❯ python scripts/azure_ai_search.py create-index
+❯ python scripts/azure_ai_search.py create-index --use-ms-entra-id
 ```
 
 ### Upload documents
@@ -216,6 +230,3 @@ Azure AI Search に対して検索を行います。
 ## References
 
 - [ks6088ts.github.io / Azure 上で作る RAG アプリの基礎](https://ks6088ts.github.io/blog/handson-rag-app)
-- [リソースにアクセスできる Microsoft Entra アプリケーションとサービス プリンシパルを作成する](https://learn.microsoft.com/ja-jp/entra/identity-platform/howto-create-service-principal-portal)
-- [Python を使用して OpenAI エンドポイントと Azure OpenAI エンドポイントを切り替える方法 / Microsoft Entra ID 認証](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
-- [Azure OpenAI Service のロールベースのアクセス制御](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/role-based-access-control)
