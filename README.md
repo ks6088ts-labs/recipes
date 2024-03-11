@@ -10,3 +10,4 @@ Code snippets for sharing
 | [scenarios/rotate_apim_subscription_key](./scenarios/rotate_apim_subscription_key/README.md) | Rotate subscription key for APIM automatically |
 | [scenarios/eventgrid_functions](./scenarios/eventgrid_functions/README.md)                   | Trigger Azure Function with Event Grid         |
 | [scenarios/private_network_app](./scenarios/private_network_app/README.md)                   | Deploy an app in private network               |
+| [scenarios/iot_device_provisioning](./scenarios/iot_device_provisioning/README.md)           | Provisioning IoT devices                       |
