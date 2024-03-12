@@ -24,3 +24,20 @@ az iot hub invoke-device-method \
     --method-name "method1" \
     --method-payload "{'hello': 'world'}"
 ```
+
+## Device Twin
+
+- [Understand and use device twins in IoT Hub](https://learn.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-device-twins)
+- [samples/sync-samples/receive_twin_desired_properties_patch.py](https://github.com/Azure/azure-iot-sdk-python/blob/main/samples/sync-samples/receive_twin_desired_properties_patch.py)
+- [Get started with device twins (Python)](https://learn.microsoft.com/en-us/azure/iot-hub/device-twins-python)
+
+```shell
+HUB_NAME="YOUR_HUB_NAME"
+RESOURCE_GROUP="YOUR_RESOURCE_GROUP"
+
+# get the connection string for IoT Hub
+az iot hub connection-string show \
+    --hub-name $HUB_NAME \
+    --resource-group $RESOURCE_GROUP \
+    --output table
+```
