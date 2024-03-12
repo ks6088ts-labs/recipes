@@ -41,3 +41,7 @@ az iot hub connection-string show \
     --resource-group $RESOURCE_GROUP \
     --output table
 ```
+
+## File upload
+
+- [Upload files from your device to the cloud with Azure IoT Hub (Python)](https://learn.microsoft.com/en-us/azure/iot-hub/file-upload-python)

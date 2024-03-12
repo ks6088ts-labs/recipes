@@ -13,6 +13,7 @@ python-dotenv = "^1.0.1"
 tenacity = "^8.2.3"
 azure-iot-hub = "^2.6.1"
 azure-iot-device = "^2.13.0"
+azure-storage-blob = "^12.19.1"
 
 
 [build-system]

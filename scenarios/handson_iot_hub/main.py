@@ -2,9 +2,11 @@ import os
 import time
 
 import typer
+from azure.core.exceptions import AzureError
 from azure.iot.device import IoTHubDeviceClient, IoTHubModuleClient, MethodResponse
 from azure.iot.hub import IoTHubRegistryManager
 from azure.iot.hub.models import QuerySpecification, Twin, TwinProperties
+from azure.storage.blob import BlobClient
 from dotenv import load_dotenv
 
 app = typer.Typer()
@@ -160,6 +162,72 @@ def direct_method():
 
     # finally, shut down the client
     device_client.shutdown()
+
+
+def store_blob(blob_info, file_name):
+    try:
+        sas_url = f"https://{blob_info['hostName']}/{blob_info['containerName']}/{blob_info['blobName']}{blob_info['sasToken']}"
+        print(
+            f"Uploading file: {file_name} to Azure Storage as blob: {blob_info['blobName']} in container {blob_info['containerName']}"
+        )
+
+        # Upload the specified file
+        with BlobClient.from_blob_url(sas_url) as blob_client:
+            with open(file_name, "rb") as f:
+                result = blob_client.upload_blob(f, overwrite=True)
+                return (True, result)
+
+    except FileNotFoundError as ex:
+        # catch file not found and add an HTTP status code to return in notification to IoT Hub
+        ex.status_code = 404
+        return (False, ex)
+
+    except AzureError as ex:
+        # catch Azure errors that might result from the upload operation
+        return (False, ex)
+
+
+@app.command()
+def file_upload(path_to_file="./.gitignore"):
+    device_client = IoTHubDeviceClient.create_from_connection_string(
+        os.getenv("IOT_HUB_DEVICE_CONNECTION_STRING")
+    )
+
+    try:
+        print("IoT Hub file upload sample, press Ctrl-C to exit")
+        # Connect the client
+        device_client.connect()
+
+        # Get the storage info for the blob
+        blob_name = os.path.basename(path_to_file)
+        storage_info = device_client.get_storage_info_for_blob(blob_name)
+
+        # Upload to blob
+        success, result = store_blob(storage_info, path_to_file)
+
+        if success:
+            print("Upload succeeded. Result is: \n")
+            print(result)
+            print()
+
+            device_client.notify_blob_upload_status(
+                storage_info["correlationId"], True, 200, "OK: {}".format(path_to_file)
+            )
+
+        else:
+            # If the upload was not successful, the result is the exception object
+            print("Upload failed. Exception is: \n")
+            print(result)
+            print()
+
+            device_client.notify_blob_upload_status(
+                storage_info["correlationId"], False, result.status_code, str(result)
+            )
+    except KeyboardInterrupt:
+        print("IoTHubDeviceClient sample stopped")
+    finally:
+        # Graceful exit
+        device_client.shutdown()
 
 
 if __name__ == "__main__":
