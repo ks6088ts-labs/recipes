@@ -50,4 +50,9 @@ kubectl apply -f ./aks-store-all-in-one.yaml -n pets
 
 # Verify the deployment
 kubectl get service store-front -n pets --watch
+
+# Delete the cluster
+az group delete \
+  --name $RESOURCE_GROUP_NAME \
+  --yes --no-wait
 ```
