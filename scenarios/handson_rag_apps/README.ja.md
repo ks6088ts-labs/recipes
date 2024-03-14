@@ -62,6 +62,7 @@ Azure OpenAI Service の API をサービスプリンシパル認証で呼び出
 - [リソースにアクセスできる Microsoft Entra アプリケーションとサービス プリンシパルを作成する](https://learn.microsoft.com/ja-jp/entra/identity-platform/howto-create-service-principal-portal)
 - [Python を使用して OpenAI エンドポイントと Azure OpenAI エンドポイントを切り替える方法](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
 - [Azure OpenAI Service のロールベースのアクセス制御](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/role-based-access-control)
+- [GPT-4 Turbo with Vision を使用する](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource)
 
 ### Help
 
@@ -80,6 +81,7 @@ Options:
 Commands:
   chat-completion
   functions
+  gpt4v-chat-completion
   tools
 ```
 
@@ -109,6 +111,35 @@ ChatCompletion(id='chatcmpl-8uuyohsNXcwPqaZH71ZqROO3hRbz5', choices=[Choice(fini
 ```shell
 ❯ python scripts/azure_openai_service.py tools --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuzGTqggLLSK0eWN5I9qfPXRXRtr', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, role='assistant', function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_acaztZMjJp0rl0jxzlbt3byM', function=Function(arguments='{"location": "Tokyo, Japan", "unit": "celsius"}', name='get_current_weather'), type='function'), ChatCompletionMessageToolCall(id='call_XNjm0zteIsWbP84Q9nL6YyMx', function=Function(arguments='{"location": "Sydney, Australia", "unit": "celsius"}', name='get_current_weather'), type='function')]), content_filter_results={})], created=1708576118, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=61, prompt_tokens=91, total_tokens=152), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
+```
+
+### GPT-4 Turbo with Vision
+
+```shell
+# help
+❯ python scripts/azure_openai_service.py  gpt4v-chat-completion --help
+Usage: azure_openai_service.py gpt4v-chat-completion [OPTIONS]
+
+Options:
+  --content TEXT                  [default: Please describe the following
+                                  input image in Japanese in detail.]
+  --image-path TEXT               [default: ./data/contoso-allinone.jpg]
+  --use-vision-enhancements / --no-use-vision-enhancements
+                                  Use vision enhancements for the image.
+                                  [default: no-use-vision-enhancements]
+  --help                          Show this message and exit.
+
+# chat completion with GPT-4 Turbo with Vision + Vision enhancements
+❯ python scripts/azure_openai_service.py gpt4v-chat-completion \
+  --content "入力画像を日本語で詳細に説明してください" \
+  --image-path "./data/contoso-allinone.jpg" \
+  --use-vision-enhancements
+---
+extracted content: この画像は、レシートの一部を示しており、木目のテーブルの上に置かれています。画面の上部には、「Contoso」という名前のロゴが印刷されています。住所は「123 Main Street, Redmond, WA 98052」とあり、電話番号は「987-654-3210」と示されています。日付と時刻は「6/10/2019 13:59」と記され、販売担当者は「Paul」と名乗っています。
+
+商品として、「1 Cappuccino $2.20」と「1 BACON & EGGS Sunny-side-up $9.5」という2つのアイテムがレシートに印刷されており、それぞれの価格と共にリストされています。小計は「$11.70」と記載され、税金は「$1.17」で、チップは手書きで「$1.63」と修正されています。合計金額も手書きで「$14.50」と修正されており、最後の金額の一部は特殊な文字で書かれていますが、正しくは「14.50」と読めます。
+
+レシートの下部は紙がやや波打っており、全体的には印刷と手書きのインクが鮮明に見えます。
 ```
 
 ## Bing Search

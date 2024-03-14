@@ -58,6 +58,7 @@ To call the Azure OpenAI Service with service principal authentication, you need
 - [Create a Microsoft Entra application and service principal that can access resources](https://learn.microsoft.com/en-us/entra/identity-platform/howto-create-service-principal-portal)
 - [How to switch between OpenAI and Azure OpenAI endpoints with Python / Microsoft Entra ID authentication](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
 - [Role-based access control for Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control)
+- [Use GPT-4 Turbo with Vision](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource)
 
 ### Help
 
@@ -105,6 +106,39 @@ Query the weather in Tokyo, Japan and Sydney, Australia and the response include
 ```shell
 ❯ python scripts/azure_openai_service.py tools --content "日本とオーストラリアの天気を教えて"
 ChatCompletion(id='chatcmpl-8uuzGTqggLLSK0eWN5I9qfPXRXRtr', choices=[Choice(finish_reason='tool_calls', index=0, logprobs=None, message=ChatCompletionMessage(content=None, role='assistant', function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_acaztZMjJp0rl0jxzlbt3byM', function=Function(arguments='{"location": "Tokyo, Japan", "unit": "celsius"}', name='get_current_weather'), type='function'), ChatCompletionMessageToolCall(id='call_XNjm0zteIsWbP84Q9nL6YyMx', function=Function(arguments='{"location": "Sydney, Australia", "unit": "celsius"}', name='get_current_weather'), type='function')]), content_filter_results={})], created=1708576118, model='gpt-35-turbo', object='chat.completion', system_fingerprint='fp_68a7d165bf', usage=CompletionUsage(completion_tokens=61, prompt_tokens=91, total_tokens=152), prompt_filter_results=[{'prompt_index': 0, 'content_filter_results': {'hate': {'filtered': False, 'severity': 'safe'}, 'self_harm': {'filtered': False, 'severity': 'safe'}, 'sexual': {'filtered': False, 'severity': 'safe'}, 'violence': {'filtered': False, 'severity': 'safe'}}}])
+```
+
+### GPT-4 Turbo with Vision
+
+```shell
+# help
+❯ python scripts/azure_openai_service.py  gpt4v-chat-completion --help
+Usage: azure_openai_service.py gpt4v-chat-completion [OPTIONS]
+
+Options:
+  --content TEXT                  [default: Please describe the following
+                                  input image in Japanese in detail.]
+  --image-path TEXT               [default: ./data/contoso-allinone.jpg]
+  --use-vision-enhancements / --no-use-vision-enhancements
+                                  Use vision enhancements for the image.
+                                  [default: no-use-vision-enhancements]
+  --help                          Show this message and exit.
+
+# chat completion with GPT-4 Turbo with Vision + Vision enhancements
+❯ python scripts/azure_openai_service.py gpt4v-chat-completion \
+  --content "入力画像を英語で詳細に説明してください" \
+  --image-path "./data/contoso-allinone.jpg" \
+  --use-vision-enhancements
+---
+extracted content: This is a receipt from a business named "Contoso," located at 123 Main Street, Redmond, WA 98052. The phone number listed is 987-654-3210. The transaction took place on June 10, 2019, at 13:59 (1:59 PM). The sales associate who handled the transaction is named Paul.
+
+The items purchased were:
+- 1 Cappuccino for $2.20
+- 1 BACON & EGGS with Sunny-side-up eggs for $9.50
+
+The receipt lists a Sub-Total of $11.70, with a tax of $1.17. There was a tip added in the amount of $1.63. The total amount for this purchase was $14.50.
+
+The tip and total amount appear to have been written by hand on the receipt.
 ```
 
 ## Bing Search
