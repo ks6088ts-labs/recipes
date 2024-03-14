@@ -1,4 +1,6 @@
+import base64
 import os
+from urllib.parse import urljoin
 
 import typer
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
@@ -26,6 +28,34 @@ def get_azure_openai_client(use_ms_entra_id=False) -> AzureOpenAI:
         api_version=os.getenv("api_version"),
         azure_endpoint=os.getenv("azure_endpoint"),
     )
+
+
+def get_gpt4v_client() -> AzureOpenAI:
+    return AzureOpenAI(
+        api_key=os.getenv("api_key"),
+        api_version=os.getenv("api_version"),
+        base_url=urljoin(
+            os.getenv("azure_endpoint"),
+            f"openai/deployments/{os.getenv('azure_deployment_gpt4v')}/extensions",
+        ),
+    )
+
+
+def get_extra_body(use_vision_enhancements):
+    if not use_vision_enhancements:
+        return None
+    return {
+        "dataSources": [
+            {
+                "type": "AzureComputerVision",
+                "parameters": {
+                    "endpoint": os.getenv("azure_cv_endpoint"),
+                    "key": os.getenv("azure_cv_api_key"),
+                },
+            }
+        ],
+        "enhancements": {"ocr": {"enabled": True}, "grounding": {"enabled": True}},
+    }
 
 
 @app.command()
@@ -130,6 +160,45 @@ def tools(
     )
 
     print(chat_completion)
+
+
+@app.command()
+def gpt4v_chat_completion(
+    content="Please describe the following input image in Japanese in detail.",
+    image_path="./data/contoso-allinone.jpg",
+    use_vision_enhancements: Annotated[
+        bool, typer.Option(help="Use vision enhancements for the image.")
+    ] = False,
+):
+    client = get_gpt4v_client()
+    encoded_image = base64.b64encode(open(image_path, "rb").read()).decode("ascii")
+    response = client.chat.completions.create(
+        model=os.getenv("azure_deployment_gpt4v"),
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a top quality image scanning machine.",
+            },
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": content,
+                    },
+                    {
+                        "type": "image_url",
+                        "image_url": {"url": f"data:image/jpeg;base64,{encoded_image}"},
+                    },
+                ],
+            },
+        ],
+        max_tokens=2000,
+        extra_body=get_extra_body(use_vision_enhancements),
+    )
+    print(f"raw response: {response}")
+    print("/" * 80)
+    print(f"extracted content: {response.choices[0].message.content}")
 
 
 if __name__ == "__main__":
