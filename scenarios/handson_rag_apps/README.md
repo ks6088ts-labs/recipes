@@ -6,6 +6,7 @@ This is a simple hands-on for RAG app on Azure. The following features are imple
   - Chat Completion
   - Functions
   - Tools
+  - GPT-4 Turbo with Vision
 - Bing Search
   - Search
   - RAG
@@ -59,6 +60,7 @@ To call the Azure OpenAI Service with service principal authentication, you need
 - [How to switch between OpenAI and Azure OpenAI endpoints with Python / Microsoft Entra ID authentication](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
 - [Role-based access control for Azure OpenAI Service](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/role-based-access-control)
 - [Use GPT-4 Turbo with Vision](https://learn.microsoft.com/en-us/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource)
+- [What is Azure AI Vision?](https://learn.microsoft.com/en-us/azure/ai-services/computer-vision/overview)
 
 ### Help
 

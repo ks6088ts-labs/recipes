@@ -6,6 +6,7 @@
   - Chat Completion
   - Functions
   - Tools
+  - GPT-4 Turbo with Vision
 - Bing 検索
   - 検索
   - RAG
@@ -63,6 +64,7 @@ Azure OpenAI Service の API をサービスプリンシパル認証で呼び出
 - [Python を使用して OpenAI エンドポイントと Azure OpenAI エンドポイントを切り替える方法](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/switching-endpoints#microsoft-entra-id-authentication)
 - [Azure OpenAI Service のロールベースのアクセス制御](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/role-based-access-control)
 - [GPT-4 Turbo with Vision を使用する](https://learn.microsoft.com/ja-jp/azure/ai-services/openai/how-to/gpt-with-vision?tabs=rest%2Csystem-assigned%2Cresource)
+- [Azure AI Vision とは?](https://learn.microsoft.com/ja-jp/azure/ai-services/computer-vision/overview)
 
 ### Help
 
