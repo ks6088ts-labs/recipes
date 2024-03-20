@@ -56,3 +56,50 @@ az group delete \
   --name $RESOURCE_GROUP_NAME \
   --yes --no-wait
 ```
+
+## Deploy taskapp
+
+- [Monorepo of task management application](https://github.com/gihyodocker/taskapp)
+- [Docker/Kubernetes 実践コンテナ開発入門 改訂新版](https://gihyo.jp/book/2024/978-4-297-14017-5)
+
+```shell
+# alias k=kubectl
+
+# Display contexts from kubeconfig
+k config get-contexts
+
+# Set the current-context in a kubeconfig file
+k config use-context handsonAksCluster
+
+# Display nodes
+k get nodes
+
+# Display cluster information
+k cluster-info
+
+# Clone the repository
+git clone https://github.com/gihyodocker/taskapp
+cd taskapp
+
+make make-mysql-passwords
+make make-k8s-mysql-secret
+
+make api-config.yaml
+make make-k8s-api-config
+
+# Local
+docker compose up -d --build
+curl http://localhost:9280/
+
+# AKS
+cd k8s/plain/aks
+k apply -f mysql-secret.yaml
+k apply -f api-config-secret.yaml
+k apply -f mysql.yaml
+k apply -f migrator.yaml
+k apply -f api.yaml
+k apply -f web.yaml # if it doesn't work, use LoadBalancer instead of Ingress. ref. https://github.com/Azure-Samples/aks-store-demo/blob/main/aks-store-all-in-one.yaml#L407
+
+k get ingress web
+curl http://$ADDRESS
+```
