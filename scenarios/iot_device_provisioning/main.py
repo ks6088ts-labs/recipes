@@ -10,8 +10,7 @@ from azure.iot.device import (
     RegistrationResult,
 )
 from dotenv import load_dotenv
-from tenacity import stop_after_attempt
-from tenacity import retry, wait_random_exponential
+from tenacity import retry, stop_after_attempt, wait_random_exponential
 
 app = typer.Typer()
 
