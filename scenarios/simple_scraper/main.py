@@ -33,7 +33,15 @@ def extract(data: str):
             "p", attrs={"qa-content": "issue_description"}
         )
         description = description_element.text.replace("\n", "").replace(" ", "")
-        contents.append({"title": title, "description": description})
+        price_element = element.find_next("li", attrs={"class": "price_minmax"})
+        price = price_element.text.replace("\n", "").replace(" ", "")
+        contents.append(
+            {
+                "title": title,
+                "description": description,
+                "price": price,
+            }
+        )
     return {
         "title": soup.title.string,
         "contents": contents,
