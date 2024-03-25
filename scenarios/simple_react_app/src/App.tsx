@@ -1,29 +1,40 @@
-import { TodoList } from './components/TodoList';
-import { AddTodoForm } from './components/AddTodoForm';
-import { TodoSummary } from './components/TodoSummary';
+import { PageFooter, PageHeader, PageNavigation } from './layouts';
+import { Categories, Products } from './components';
 
-import { useTodoList } from './hooks/useTodoList';
+import {
+  sneakersProductsMaster,
+  favorites,
+  earringsProductsMaster,
+} from './data';
 
-function App() {
-  const { todoList, changeCompleted, addTodo, deleteTodo, deleteAllCompleted } =
-    useTodoList();
+import { useFavorite } from './hooks/useFavorite';
+
+export default function App() {
+  const { favoriteCodes, changeFavorite } = useFavorite(favorites);
 
   return (
-    <main className="mx-auto mt-10 max-w-xl space-y-10">
-      <h1 className="text-center text-4xl">Todoアプリ</h1>
-      <div className="space-y-5">
-        <AddTodoForm addTodo={addTodo} />
-        <div className="space-y-5 rounded bg-slate-200 p-5">
-          <TodoList
-            todoList={todoList}
-            changeCompleted={changeCompleted}
-            deleteTodo={deleteTodo}
-          />
-          <TodoSummary deleteAllCompleted={deleteAllCompleted} />
-        </div>
+    <div>
+      <div className="sticky top-0 z-10 bg-white">
+        <PageHeader />
+        <Categories />
       </div>
-    </main>
+      <main className="container mx-auto max-w-screen-xl p-5 lg:p-10">
+        <h2 className="pb-5 text-lg font-bold text-secondary-text lg:text-xl">
+          閲覧した商品からのおすすめ
+        </h2>
+        <Products
+          productsMaster={sneakersProductsMaster}
+          favoriteCodes={favoriteCodes}
+          changeFavorite={changeFavorite}
+        />
+        <Products
+          productsMaster={earringsProductsMaster}
+          favoriteCodes={favoriteCodes}
+          changeFavorite={changeFavorite}
+        />
+      </main>
+      <PageFooter />
+      <PageNavigation />
+    </div>
   );
 }
-
-export default App;
