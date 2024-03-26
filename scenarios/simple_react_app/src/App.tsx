@@ -1,5 +1,5 @@
 import { PageFooter, PageHeader, PageNavigation } from './layouts';
-import { Categories, Products } from './components';
+import { Categories, Products, SignInSignOutButton } from './components';
 
 import {
   sneakersProductsMaster,
@@ -8,12 +8,21 @@ import {
 } from './data';
 
 import { useFavorite } from './hooks/useFavorite';
+import { MsalProvider } from '@azure/msal-react';
+import { IPublicClientApplication } from '@azure/msal-browser';
 
-export default function App() {
+type AppProps = {
+  pca: IPublicClientApplication;
+};
+
+export default function App({ pca }: AppProps) {
   const { favoriteCodes, changeFavorite } = useFavorite(favorites);
 
   return (
     <div>
+      <MsalProvider instance={pca}>
+        <SignInSignOutButton />
+      </MsalProvider>
       <div className="sticky top-0 z-10 bg-white">
         <PageHeader />
         <Categories />
