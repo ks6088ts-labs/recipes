@@ -34,3 +34,5 @@ export default {
 - [【2024年】React, TypeScript, Tailwind CSSでTodoアプリを作ろう](https://zenn.dev/stray/books/e3dbdf3f7aeac6)
 - [【2024年】React, Tailwind CSSでメルカリクローンサイトを作ろう【入門】](https://zenn.dev/stray/books/bbefb52ee87a9b)
 - [zenn-mercari-clone](https://github.com/stray-code/zenn-mercari-clone)
+- [MSAL.js for React TypeScript Sample - Authorization Code Flow in Single-Page Applications](https://github.com/AzureAD/microsoft-authentication-library-for-js/tree/dev/samples/msal-react-samples/typescript-sample)
+- [Vite ＋ React + TypeScript で 環境変数ファイルを作成する](https://zenn.dev/longbridge/articles/575190b038f805)
