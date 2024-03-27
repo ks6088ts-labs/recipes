@@ -6,6 +6,7 @@ Code snippets for sharing
 | -------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | [scenarios/eventgrid_functions](./scenarios/eventgrid_functions/README.md)                   | Trigger Azure Function with Event Grid         |
 | [scenarios/handson_aks](./scenarios/handson_aks/README.md)                                   | Simple hands-on for Azure Kubernetes Service   |
+| [scenarios/handson_eventhubs](./scenarios/handson_eventhubs/README.md)                       | Simple hands-on for Azure Event Hubs           |
 | [scenarios/handson_iot_hub](./scenarios/handson_iot_hub/README.md)                           | Simple hands-on for Azure IoT Hub in Python    |
 | [scenarios/handson_line_api](./scenarios/handson_line_api/README.md)                         | Simple hands-on for LINE API                   |
 | [scenarios/handson_microsoft_search](./scenarios/handson_microsoft_search/README.md)         | Simple hands-on for Microsoft Search API       |
