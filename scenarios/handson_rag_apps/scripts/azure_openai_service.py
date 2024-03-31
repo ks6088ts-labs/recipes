@@ -64,6 +64,7 @@ def chat_completion(
     use_ms_entra_id: Annotated[
         bool, typer.Option(help="Use Microsoft Entra ID.")
     ] = False,
+    stream: Annotated[bool, typer.Option(help="Use stream option")] = False,
 ):
     client = get_azure_openai_client(use_ms_entra_id)
     chat_completion = client.chat.completions.create(
@@ -74,8 +75,15 @@ def chat_completion(
                 "content": content,
             },
         ],
+        stream=stream,
     )
-    print(chat_completion)
+
+    if stream:
+        for chunk in chat_completion:
+            print(chunk)
+            print("****************")
+    else:
+        print(chat_completion)
 
 
 @app.command()
@@ -84,6 +92,7 @@ def functions(
     use_ms_entra_id: Annotated[
         bool, typer.Option(help="Use Microsoft Entra ID.")
     ] = False,
+    stream: Annotated[bool, typer.Option(help="Use stream option")] = False,
 ):
     functions = []
     functions.append(
@@ -114,8 +123,15 @@ def functions(
             },
         ],
         functions=functions,
+        stream=stream,
     )
-    print(chat_completion)
+
+    if stream:
+        for chunk in chat_completion:
+            print(chunk)
+            print("****************")
+    else:
+        print(chat_completion)
 
 
 @app.command()
@@ -124,6 +140,7 @@ def tools(
     use_ms_entra_id: Annotated[
         bool, typer.Option(help="Use Microsoft Entra ID.")
     ] = False,
+    stream: Annotated[bool, typer.Option(help="Use stream option")] = False,
 ):
     tools = []
     tools.append(
@@ -157,9 +174,15 @@ def tools(
             },
         ],
         tools=tools,
+        stream=stream,
     )
 
-    print(chat_completion)
+    if stream:
+        for chunk in chat_completion:
+            print(chunk)
+            print("****************")
+    else:
+        print(chat_completion)
 
 
 @app.command()
