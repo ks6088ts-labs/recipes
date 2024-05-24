@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "handson-promptflow"
+version = "0.1.0"
+description = ""
+authors = ["ks6088ts <ks6088ts@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+promptflow = {extras = ["azure"], version = "^1.11.0"}
+promptflow-tools = "^1.4.0"
+keyrings-alt = "^5.0.1"
+promptflow-tracing = "^1.11.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
